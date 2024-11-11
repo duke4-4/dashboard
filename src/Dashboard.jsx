@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import './Dashboard.css'
-import Header from './Header'
-import Sidebar from './Sidebar'
-import Home from './Home'
+import Header from '../Header'
+import Sidebar from '../Sidebar'
+import Home from '../Home'
 
 function Dashboard() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false)

@@ -1,7 +1,7 @@
-import Login from "./Login";
-import Dashboard from "./Dashboard";
+import Login from "../Login";
+import Dashboard from "../Dashboard";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import SignUp from "./SignUp";
+import SignUp from "../SignUp";
 
 const initializeUsers = () => {
   const existingUsers = JSON.parse(localStorage.getItem("users"));
