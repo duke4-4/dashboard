@@ -31,6 +31,7 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
                     <BsPeopleFill className='icon'/> Receivers
                 </a>
             </li>
+            
             <li className='sidebar-list-item'>
                 <a href="">
                     <BsListCheck className='icon'/> History
