@@ -48,6 +48,7 @@ const Login = () => {
     } else if (email === "customer@example.com" && password === "customerPassword!") {
       // Redirect to customer dashboard if customer
       navigate('/Dashboard');
+      
     } else {
       setErrorMessage("Invalid credentials");
     }
