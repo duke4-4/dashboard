@@ -1,11 +1,69 @@
 import React, { useState } from 'react';
 import './Dashboard.css';
+// import ParcelStats from './ParcelsStats';
+import { Bar } from 'react-chartjs-2';
+import { Radar } from 'react-chartjs-2';
+import { RadialLinearScale } from 'chart.js';
+import { LineElement } from 'chart.js';
 import {
   BsFillArchiveFill,
   BsFillGrid3X3GapFill,
   BsPeopleFill,
   BsFillBellFill
 } from 'react-icons/bs';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  
+  LinearScale,
+  BarElement,
+  PointElement,  // Add this import
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  RadialLinearScale,
+    LineElement,
+  LinearScale,
+  BarElement,
+  PointElement,  // Register point element
+  Title,
+  Tooltip,
+  Legend
+);
+
+function ParcelTrackingRadar() {
+  const data = {
+    labels: ['Dispatched', 'In Transit', 'Out for Delivery', 'Delivered'],
+    datasets: [
+      {
+        label: 'Parcel Tracking',
+        data: [15, 30, 10, 20], // Example data
+        backgroundColor: 'rgba(34, 202, 236, 0.2)',
+        borderColor: '#22CAEC',
+      },
+    ],
+  };
+
+  return <Radar data={data} />;
+}
+function ParcelStats() {
+  const data = {
+    labels: ['Sent', 'Received', 'Pending'],
+    datasets: [
+      {
+        label: 'Parcel Stats',
+        data: [20, 15, 5],
+        backgroundColor: ['#4CAF50', '#FF9800', '#F44336'],
+      },
+    ],
+  };
+
+  return <Bar data={data} />;
+}
 
 function Home() {
   const [isSendModalOpen, setSendModalOpen] = useState(false);
@@ -25,7 +83,7 @@ function Home() {
   return (
     <main className={`main-container ${isSendModalOpen || isReceiveModalOpen || isHistoryModalOpen || isReceiversModalOpen ? 'blurred' : ''}`}>
       <div className='main-title'>
-        <h3>DASHBOARD</h3>
+        <h3 className='font-bold'>HOME</h3>
       </div>
 
       <div className='main-cards'>
@@ -54,6 +112,40 @@ function Home() {
           </div>
         </div>
       </div>
+      {/* charts section */}
+  {/* <div className="charts-container">
+  <div className="charts-section bg-white p-6 rounded-lg shadow-md mb-6">
+    <h3 className="text-2xl font-semibold text-gray-800 mb-4">Parcel Statistics</h3>
+    <ParcelStats />
+  </div>
+  <div className="section parcel-tracking">
+    <h3>Parcel Tracking</h3>
+    <ParcelTrackingRadar />
+  </div>
+</div> */}
+<div className='toasts'>
+  <div className="section promotions-tips bg-[#FF8227] p-6 rounded-lg shadow-md mb-6">
+  <h3 className="text-2xl font-semibold text-white mb-4">Promotions & Quick Tips</h3>
+  <p className="text-white mb-2">Get 10% off your next parcel with code <span className="font-bold text-black">SAVE10</span></p>
+  <p className="text-white">Tip: Double-check address for faster deliveries.</p>
+</div>
+<div className="section upcoming-events bg-white p-6 rounded-lg shadow-md mb-6">
+  <h3 className="text-2xl font-semibold text-gray-800 mb-4">Upcoming Events</h3>
+  <ul>
+    <li className="mb-2 text-[#FF8227] ">Event: Parcel Delivery Workshop - Date: 15th Nov</li>
+    <li className="mb-2 text-[#FF8227]">Event: Customer Feedback Session - Date: 22nd Nov</li>
+  </ul>
+</div>
+
+
+{/* <div className="section call-to-action bg-white p-6 rounded-lg shadow-md mb-6">
+  <h3 className="text-2xl font-semibold text-gray-800 mb-4">Earn Points</h3>
+  <p className=' text-[#FF8227]' >Share your experiences and tips with friends and family, and earn points for each. Redeem your points for free parcels.</p>
+  <button onClick={closeAllModals} className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Earn Points</button>
+</div> */}
+</div>
+
+
 
       {/* Send Parcel Modal */}
       {isSendModalOpen && (

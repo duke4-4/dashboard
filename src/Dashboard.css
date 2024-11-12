@@ -212,12 +212,38 @@ select:focus {
   transition: background-color 0.3s ease;
 }
 
+.toasts{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-around;
+  
+}
 .close-button:hover {
   background-color: #c56e30;
 }
 
 /* Apply blur effect only to content outside the modal */
+.cahrts-container{
+  display: flex;
+}
+.charts-section,
+.section.parcel-tracking {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* You can adjust the z-index based on layer stacking */
+  padding: 20px;
+  background-color: #fff;
+}
 
+.charts-section:hover,
+.section.parcel-tracking:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease-in-out;
+}
 
 
 .main-title {
