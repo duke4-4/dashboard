@@ -142,7 +142,7 @@ const handleReceiveParcel = (id, paymentStatus) => {
           </div>
         </div>
       </div>
-      {/* charts section */}
+ 
   <div className="charts-container">
   <div className="charts-section bg-white p-6 rounded-lg shadow-md mb-6">
     <h3 className="text-2xl font-semibold text-gray-800 mb-4">Parcel Statistics</h3>
@@ -178,7 +178,9 @@ const handleReceiveParcel = (id, paymentStatus) => {
 
 
 
-      {/* Send Parcel Modal */}
+
+
+      {/* Send Parcel Modal*/}
       {isSendModalOpen && (
         <div className='modal-overlay bg-gray-800 bg-opacity-60 fixed inset-0 flex items-center justify-center'>
   <div className='modal bg-white p-8 rounded-lg shadow-lg w-full max-w-lg'>
@@ -238,6 +240,7 @@ const handleReceiveParcel = (id, paymentStatus) => {
             parcel.referenceCode.toLowerCase().includes(searchTerm.toLowerCase()) &&
             parcel.status !== 'Received'
           )
+          
           .map((parcel) => (
             <div key={parcel.id} className="mb-4 p-4 border rounded-lg bg-gray-50">
               <div className="flex justify-between items-start mb-2">
