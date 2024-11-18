@@ -153,6 +153,7 @@ const handleReceiveParcel = (id, paymentStatus) => {
     <ParcelTrackingRadar />
   </div>
 </div>
+
 <div className='toasts'>
   <div className="section promotions-tips bg-[#FF8227] p-6 rounded-lg shadow-md mb-6">
   <h3 className="text-2xl font-semibold text-white mb-4">Promotions & Quick Tips</h3>
