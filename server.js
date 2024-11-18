@@ -19,7 +19,7 @@ app.get('/parcels', (req, res) => {
   });
 });
 
-// Update parcel
+
 app.put('/parcels/:id', (req, res) => {
   const parcelId = parseInt(req.params.id, 10);
   const updatedParcel = req.body;
