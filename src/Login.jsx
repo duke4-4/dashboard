@@ -18,39 +18,14 @@ const Login = () => {
     handleSubmit();
   };
 
-  const handleSubmit = (event) => {
-    if (event) event.preventDefault();
-
-    
-    setErrorMessage("");
-
-    if (email === "") {
-      setErrorMessage("Email is required");
-      return;
-    }
-    if (password === "") {
-      setErrorMessage("Password is required");
-      return;
-    }
-    if (password.length < 8) {
-      setErrorMessage("Password must at least be 8 characters");
-      return;
-    }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-      setErrorMessage("Password must contain a special character");
-      return;
-    }
-
-    // check if user or admin
-    if (email === "admin@example.com" && password === "adminPassword!") {
-      // Redirect to admin dashboard if admin
-      navigate('/AdminDashboard');
-    } else if (email === "customer@example.com" && password === "customerPassword!") {
-      // Redirect to customer dashboard if customer
-      navigate('/Dashboard');
-      
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Add basic admin check (in real app, this should be handled by backend)
+    if (email === 'admin@example.com' && password === 'admin123') {
+      navigate('/admin-dashboard');
     } else {
-      setErrorMessage("Invalid credentials");
+      // Regular user login
+      navigate('/dashboard');
     }
   };
 

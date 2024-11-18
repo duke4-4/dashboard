@@ -22,6 +22,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { useParcels } from './context/ParcelContext';
 
 ChartJS.register(
   CategoryScale,
@@ -77,6 +78,35 @@ function Home() {
     setHistoryModalOpen(false);
     setReceiversModalOpen(false);
   };
+const [searchTerm, setSearchTerm] = useState('');
+const { parcels, addParcel, updateParcel } = useParcels();
+
+const handleSendParcel = (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const newParcel = {
+    referenceCode: generateReferenceCode(),
+    name: formData.get('receiverName'),
+    location: formData.get('destinationAddress'),
+    amount: parseFloat(formData.get('paymentAmount')),
+    paymentStatus: formData.get('paymentStatus'),
+    description: formData.get('description'),
+    weight: formData.get('weight'),
+    dispatchAddress: formData.get('dispatchAddress'),
+    phoneNumber: formData.get('phoneNumber'),
+  };
+  
+  addParcel(newParcel);
+  closeAllModals();
+};
+
+const handleReceiveParcel = (id, paymentStatus) => {
+  updateParcel(id, {
+    status: 'Received',
+    paymentStatus,
+    receivedDate: new Date().toISOString().split('T')[0]
+  });
+};
 
   const generateReferenceCode = () => `REF${Math.floor(100000 + Math.random() * 900000)}`;
 
@@ -113,7 +143,7 @@ function Home() {
         </div>
       </div>
       {/* charts section */}
-  {/* <div className="charts-container">
+  <div className="charts-container">
   <div className="charts-section bg-white p-6 rounded-lg shadow-md mb-6">
     <h3 className="text-2xl font-semibold text-gray-800 mb-4">Parcel Statistics</h3>
     <ParcelStats />
@@ -122,7 +152,7 @@ function Home() {
     <h3>Parcel Tracking</h3>
     <ParcelTrackingRadar />
   </div>
-</div> */}
+</div>
 <div className='toasts'>
   <div className="section promotions-tips bg-[#FF8227] p-6 rounded-lg shadow-md mb-6">
   <h3 className="text-2xl font-semibold text-white mb-4">Promotions & Quick Tips</h3>
@@ -152,27 +182,27 @@ function Home() {
         <div className='modal-overlay bg-gray-800 bg-opacity-60 fixed inset-0 flex items-center justify-center'>
   <div className='modal bg-white p-8 rounded-lg shadow-lg w-full max-w-lg'>
     <h2 style={{color: '#FF8227' }} className="text-2xl font-bold mb-6 text-center">Send Parcel</h2>
-    <form className="grid gap-4">
+    <form onSubmit={handleSendParcel} className="grid gap-4">
       <div className="grid grid-cols-2 gap-4">
-        <input type="text" value={generateReferenceCode()} readOnly placeholder="Reference Code" className="w-full p-2 border rounded"/>
-        <input type="text" placeholder="Dispatch Address" className="w-full p-2 border rounded"/>
+        <input type="text" name="referenceCode" value={generateReferenceCode()} readOnly placeholder="Reference Code" className="w-full p-2 border rounded"/>
+        <input type="text" name="dispatchAddress" placeholder="Dispatch Address" className="w-full p-2 border rounded"/>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <input type="text" placeholder="Receiver Name" className="w-full p-2 border rounded"/>
-        <input type="text" placeholder="Phone Number" className="w-full p-2 border rounded"/>
+        <input type="text" name="receiverName" placeholder="Receiver Name" className="w-full p-2 border rounded"/>
+        <input type="text" name="phoneNumber" placeholder="Phone Number" className="w-full p-2 border rounded"/>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <input type="text" placeholder="Destination Address" className="w-full p-2 border rounded"/>
-        <input type="text" placeholder="Weight of Package (kg)" className="w-full p-2 border rounded"/>
+        <input type="text" name="destinationAddress" placeholder="Destination Address" className="w-full p-2 border rounded"/>
+        <input type="text" name="weight" placeholder="Weight of Package (kg)" className="w-full p-2 border rounded"/>
       </div>
-      <input type="text" placeholder="Description of Package" className="w-full p-2 border rounded"/>
+      <input type="text" name="description" placeholder="Description of Package" className="w-full p-2 border rounded"/>
       <div className="grid grid-cols-2 gap-4">
-        <input type="text" placeholder="Payment Amount" className="w-full p-2 border rounded"/>
-        <select className="w-full p-2 border rounded">
-          <option>Paid</option>
-          <option>To pay on delivery</option>
-          <option>Deliver + Float Paid</option>
-          <option>Deliver + Float Pay Forward</option>
+        <input type="number" name="paymentAmount" placeholder="Payment Amount" className="w-full p-2 border rounded"/>
+        <select name="paymentStatus" className="w-full p-2 border rounded">
+          <option value="Paid">Paid</option>
+          <option value="To Pay">To pay on delivery</option>
+          <option value="Float Paid">Deliver + Float Paid</option>
+          <option value="Float Forward">Deliver + Float Pay Forward</option>
         </select>
       </div>
       <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Send</button>
@@ -184,20 +214,101 @@ function Home() {
       )}
 
       {/* Receive Parcel Modal */}
-      {isReceiveModalOpen && (
-        <div className='modal-overlay'>
-          <div className='modal'>
-            <h2  style={{color: '#FF8227' }} >Receive Parcel</h2>
-            <form>
-              <input type="text" placeholder="Name" />
-              <input type="text" placeholder="Reference Code" />
-              <input type="text" placeholder="Location" />
-              <button type="submit">Receive</button>
-            </form>
-            <button onClick={closeAllModals} className="close-button">Close</button>
+    {isReceiveModalOpen && (
+  <div className='modal-overlay bg-gray-800 bg-opacity-60 fixed inset-0 flex items-center justify-center'>
+    <div className='modal bg-white p-8 rounded-lg shadow-lg w-full max-w-lg'>
+      <h2 style={{ color: '#FF8227' }} className="text-2xl font-bold mb-6 text-center">Receive Parcel</h2>
+
+      {/* Search Input */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search by reference number..."
+          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8227]"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      {/* Filtered Parcel List */}
+      <div className="max-h-[400px] overflow-y-auto">
+        {parcels
+          .filter((parcel) =>
+            parcel.referenceCode.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            parcel.status !== 'Received'
+          )
+          .map((parcel) => (
+            <div key={parcel.id} className="mb-4 p-4 border rounded-lg bg-gray-50">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <p className="font-bold text-gray-800">Reference: {parcel.referenceCode}</p>
+                  <p className="text-gray-600">Name: {parcel.name}</p>
+                  <p className="text-gray-600">Location: {parcel.location}</p>
+                  <p className="text-gray-600">Amount: ${parcel.amount}</p>
+                  {parcel.float > 0 && (
+                    <p className="text-gray-600">Float: ${parcel.float}</p>
+                  )}
+                </div>
+                <span className={`px-2 py-1 rounded-full text-sm ${
+                  parcel.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                }`}>
+                  {parcel.status}
+                </span>
+              </div>
+
+              {/* Payment Actions */}
+              <div className="grid grid-cols-2 gap-2 mt-4">
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+                  onClick={() => handleReceiveParcel(parcel.id, 'Paid')}
+                >
+                  Mark as Paid
+                </button>
+                {parcel.float > 0 && (
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                    onClick={() => handleReceiveParcel(parcel.id, 'Paid with Float')}
+                  >
+                    Use Float (${parcel.float})
+                  </button>
+                )}
+                <button
+                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+                  onClick={() => handleReceiveParcel(parcel.id, 'Pending Payment')}
+                >
+                  Receive Only
+                </button>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                  onClick={() => handleReceiveParcel(parcel.id, 'Payment Declined')}
+                >
+                  Decline
+                </button>
+              </div>
+            </div>
+          ))}
+
+        {parcels.filter(parcel => 
+          parcel.referenceCode.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          parcel.status !== 'Received'
+        ).length === 0 && (
+          <div className="text-center py-4 text-gray-500">
+            No pending parcels found with this reference number.
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+      {/* Close Modal */}
+      <button
+        onClick={closeAllModals}
+        className="mt-6 w-full bg-gray-200 text-gray-700 py-2 rounded hover:bg-gray-300 transition-colors"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
 
       {/* History Modal */}
       {isHistoryModalOpen && (

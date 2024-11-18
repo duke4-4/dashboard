@@ -9,64 +9,31 @@ import {
 } from 'react-icons/bs';
 import PropTypes from 'prop-types';
 
-function Header({ OpenSidebar }) {
+function AdminHeader({ OpenSidebar }) {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
 
-  // Search suggestions data
-  const searchSuggestions = [
-    { term: 'Send Parcel', path: '/dashboard', action: 'send' },
-    { term: 'Receive Parcel', path: '/dashboard', action: 'receive' },
-    { term: 'Track Parcel', path: '/dashboard', action: 'track' },
-    { term: 'History', path: '/dashboard', action: 'history' },
-    { term: 'Settings', path: '/dashboard/settings' },
-    { term: 'Profile', path: '/dashboard/profile' },
-  ];
-
-  // Refs for dropdowns
+  // Refs for dropdown containers
   const profileRef = useRef(null);
   const notificationsRef = useRef(null);
   const messagesRef = useRef(null);
-  const searchRef = useRef(null);
 
-  // Filter suggestions based on search term
-  const filteredSuggestions = searchSuggestions.filter(suggestion =>
-    suggestion.term.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Sample data for dropdowns
+  const notifications = [
+    { id: 1, text: 'New parcel received', time: '5 min ago' },
+    { id: 2, text: 'Delivery completed', time: '1 hour ago' },
+    { id: 3, text: 'Payment confirmed', time: '2 hours ago' },
+  ];
 
-  const handleSearchSelect = (suggestion) => {
-    setSearchTerm('');
-    setShowSuggestions(false);
-    
-    if (suggestion.action) {
-      // Handle special actions that need to trigger modals
-      // You'll need to pass these functions as props from the parent component
-      switch (suggestion.action) {
-        case 'send':
-          // Handle send modal
-          break;
-        case 'receive':
-          // Handle receive modal
-          break;
-        case 'track':
-          // Handle tracking
-          break;
-        case 'history':
-          // Handle history modal
-          break;
-        default:
-          break;
-      }
-    }
-    
-    navigate(suggestion.path);
-  };
+  const messages = [
+    { id: 1, sender: 'John Doe', text: 'Package status update', time: '10 min ago' },
+    { id: 2, sender: 'Jane Smith', text: 'Delivery query', time: '30 min ago' },
+    { id: 3, sender: 'Mike Johnson', text: 'New request', time: '1 hour ago' },
+  ];
 
-  // Click outside handlers
+  // Click outside handler
   useEffect(() => {
     function handleClickOutside(event) {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -77,9 +44,6 @@ function Header({ OpenSidebar }) {
       }
       if (messagesRef.current && !messagesRef.current.contains(event.target)) {
         setShowMessages(false);
-      }
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setShowSuggestions(false);
       }
     }
 
@@ -97,38 +61,15 @@ function Header({ OpenSidebar }) {
         <BsJustify className='icon_header' onClick={OpenSidebar} />
       </div>
       
-      <div className='header-left' ref={searchRef}>
-        <div className='search-wrapper'>
+      <div className='header-left'>
+        <div className='search-container'>
           <BsSearch className='icon' />
           <input 
             type="text" 
             placeholder="Search..." 
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setShowSuggestions(true);
-            }}
             className='search-input'
+            style={{ color: '#9e9ea4' }}
           />
-          {showSuggestions && searchTerm && (
-            <div className='search-suggestions'>
-              {filteredSuggestions.map((suggestion, index) => (
-                <div
-                  key={index}
-                  className='suggestion-item'
-                  onClick={() => handleSearchSelect(suggestion)}
-                >
-                  <BsSearch className='suggestion-icon' />
-                  <span>{suggestion.term}</span>
-                </div>
-              ))}
-              {filteredSuggestions.length === 0 && (
-                <div className='suggestion-item no-results'>
-                  No results found
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </div>
       
@@ -205,13 +146,13 @@ function Header({ OpenSidebar }) {
             <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50'>
               <button 
                 className='block px-4 py-2 text-sm text-[#9e9ea4] hover:bg-[#db9600] hover:text-white w-full text-left'
-                onClick={() => navigate('/dashboard/profile')}
+                onClick={() => navigate('/admin-dashboard/profile')}
               >
                 Profile
               </button>
               <button 
                 className='block px-4 py-2 text-sm text-[#9e9ea4] hover:bg-[#db9600] hover:text-white w-full text-left'
-                onClick={() => navigate('/dashboard/settings')}
+                onClick={() => navigate('/admin-dashboard/settings')}
               >
                 Settings
               </button>
@@ -229,8 +170,8 @@ function Header({ OpenSidebar }) {
   );
 }
 
-Header.propTypes = {
+AdminHeader.propTypes = {
   OpenSidebar: PropTypes.func.isRequired,
 };
 
-export default Header;
+export default AdminHeader; 
