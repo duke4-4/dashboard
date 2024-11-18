@@ -30,7 +30,7 @@ const App = () => {
     <ParcelProvider>
       <Router>
         <Routes>
-          <Route exact path="/" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/SignUp" element={<SignUp />} />
           <Route path="/admin-dashboard" element={<AdminHome />} />
