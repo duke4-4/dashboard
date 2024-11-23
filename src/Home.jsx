@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Dashboard.css';
 // import ParcelStats from './ParcelsStats';
 import { Bar } from 'react-chartjs-2';

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   BsFillBellFill,
@@ -148,7 +148,7 @@ function Header({ OpenSidebar }) {
               <h3 className='px-4 py-2 text-sm font-semibold text-[#db9600] border-b'>
                 Notifications
               </h3>
-              {notifications.map(notification => (
+              {showNotifications.map(notification => (
                 <div 
                   key={notification.id} 
                   className='px-4 py-3 hover:bg-gray-50 border-b cursor-pointer'
@@ -176,7 +176,7 @@ function Header({ OpenSidebar }) {
               <h3 className='px-4 py-2 text-sm font-semibold text-[#db9600] border-b'>
                 Messages
               </h3>
-              {messages.map(message => (
+              {showMessages.map(message => (
                 <div 
                   key={message.id} 
                   className='px-4 py-3 hover:bg-gray-50 border-b cursor-pointer'

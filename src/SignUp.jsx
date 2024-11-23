@@ -31,7 +31,7 @@ const SignUp = () => {
       setErrorMessage("Password must be at least 8 characters");
       return;
     }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
       setErrorMessage("Password must contain a special character");
       return;
     }

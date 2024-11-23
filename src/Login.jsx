@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useState } from "react";
 import './index.css';
 import { FiAlertTriangle } from "react-icons/fi";
@@ -8,7 +9,7 @@ import Logo from "./assets/Logoo.png";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();

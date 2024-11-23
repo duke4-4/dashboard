@@ -28,7 +28,7 @@ initializeUsers();
 const App = () => {
   return (
     <ParcelProvider>
-      <Router basename="/">
+      <Router >
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
