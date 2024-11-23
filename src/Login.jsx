@@ -9,30 +9,43 @@ import Logo from "./assets/Logoo.png";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage] = useState("");
+  const [userRole, setUserRole] = useState("sender");
+  const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleClick = () => {
 
-    handleSubmit();
+  const userCredentials = {
+    admin: { email: 'admin@example.com', password: 'admin123' },
+    sender: { email: 'sender@example.com', password: 'sender123' },
+    receiver: { email: 'receiver@example.com', password: 'receiver123' }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add basic admin check (in real app, this should be handled by backend)
-    if (email === 'admin@example.com' && password === 'admin123') {
-      navigate('/admin-dashboard');
+    
+   
+    const credentials = userCredentials[userRole];
+    
+    if (email === credentials.email && password === credentials.password) {
+      switch (userRole) {
+        case 'admin':
+          navigate('/admin-dashboard');
+          break;
+        case 'sender':
+          navigate('/dashboard');
+          break;
+        case 'receiver':
+          navigate('/receiver-dashboard');
+          break;
+        default:
+          navigate('/dashboard');
+      }
     } else {
-      // Regular user login
-      navigate('/dashboard');
+      setErrorMessage("Invalid credentials for selected role");
     }
   };
-
-  // const handleSignUp = (event) => {
-  //   event.preventDefault();
-  // };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -55,7 +68,7 @@ const Login = () => {
               value={email}
               placeholder="Email address"
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-[#FF8227]"
             />
           </div>
           <div className="mb-4 relative">
@@ -65,31 +78,41 @@ const Login = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-[#FF8227]"
             />
             <i
-              className={`fas fa-eye absolute top-5 right-3 cursor-pointer ${showPassword ? "text-indigo-600" : "text-gray-400"}`}
+              className={`fas fa-eye absolute top-5 right-3 cursor-pointer ${showPassword ? "text-[#FF8227]" : "text-gray-400"}`}
               onClick={toggleShowPassword}
             ></i>
           </div>
+
+          <div className="mb-4">
+            <select
+              value={userRole}
+              onChange={(e) => setUserRole(e.target.value)}
+              className="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-[#FF8227]"
+            >
+              <option value="sender">Sender</option>
+              <option value="receiver">Receiver</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          
+
           {errorMessage && (
             <div className="mb-4 text-sm text-red-600 flex gap-1 items-center">
               <FiAlertTriangle /> {errorMessage}
             </div>
           )}
           <button
-            onClick={handleClick}
             type="submit"
-            className="w-full bg-[#FF8227] text-white py-2 px-4 rounded hover:bg-[#c56e30] "
+            className="w-full bg-[#FF8227] text-white py-2 px-4 rounded hover:bg-[#c56e30]"
           >
             Sign In
           </button>
           <div className="mt-4 text-sm text-[20px] flex gap-3">
             <p className="text-[20px]">Don't have an account?</p>
-            <Link to="/SignUp"
-              // onClick={handleSignUp}
-              className="text-[#ea580c] hover:underline text-[20px]"
-            >
+            <Link to="/SignUp" className="text-[#ea580c] hover:underline text-[20px]">
               Create one now
             </Link>
           </div>

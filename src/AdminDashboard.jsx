@@ -10,7 +10,6 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import './Dashboard.css';
-import PropTypes from 'prop-types';
 import { useParcels } from './context/ParcelContext';
 
 ChartJS.register(
@@ -33,7 +32,6 @@ function AdminDashboard() {
 
   const [activeModal, setActiveModal] = useState(null);
 
-  // Calculate statistics
   useEffect(() => {
     const newStats = parcels.reduce((acc, parcel) => ({
       total: acc.total + 1,
@@ -64,7 +62,6 @@ function AdminDashboard() {
         <h3 className='font-bold'>ADMIN DASHBOARD</h3>
       </div>
       
-      {/* Stats Cards */}
       <div className="main-cards">
         <div className="card" onClick={() => setActiveModal('parcels')}>
           <div className='card-inner'>
@@ -92,7 +89,6 @@ function AdminDashboard() {
         </div>
       </div>
 
-      {/* Revenue Chart */}
       <div className="charts-container">
         <div className="charts-section bg-white p-6 rounded-lg shadow-md mb-6">
           <h2 className="text-xl font-bold mb-4">Revenue Overview</h2>
@@ -100,7 +96,48 @@ function AdminDashboard() {
         </div>
       </div>
 
-      {/* Modals */}
+      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 className="text-xl font-bold mb-4 text-gray-800">Recent Parcels</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto">
+            <thead>
+              <tr className="bg-[#FF8227]">
+                <th className="px-4 py-2 text-white">Reference</th>
+                <th className="px-4 py-2 text-white">Receiver</th>
+                <th className="px-4 py-2 text-white">Phone</th>
+                <th className="px-4 py-2 text-white">From</th>
+                <th className="px-4 py-2 text-white">To</th>
+                <th className="px-4 py-2 text-white">Status</th>
+                <th className="px-4 py-2 text-white">Payment</th>
+                <th className="px-4 py-2 text-white">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {parcels.map((parcel) => (
+                <tr key={parcel.id} className="border-b hover:bg-gray-50">
+                  <td className="px-4 py-2 text-gray-900">{parcel.referenceCode}</td>
+                  <td className="px-4 py-2 text-gray-900">{parcel.name}</td>
+                  <td className="px-4 py-2 text-gray-900">{parcel.phoneNumber}</td>
+                  <td className="px-4 py-2 text-gray-900">{parcel.dispatchAddress}</td>
+                  <td className="px-4 py-2 text-gray-900">{parcel.location}</td>
+                  <td className="px-4 py-2">
+                    <span className={`px-2 py-1 rounded-full text-sm ${
+                      parcel.status === 'Pending' 
+                        ? 'bg-yellow-100 text-yellow-800' 
+                        : 'bg-green-100 text-green-800'
+                    }`}>
+                      {parcel.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 text-gray-900">{parcel.paymentStatus}</td>
+                  <td className="px-4 py-2 text-gray-900">${parcel.amount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {activeModal && (
         <div className='modal-overlay'>
           <div className='modal'>
@@ -115,9 +152,10 @@ function AdminDashboard() {
                 <thead>
                   <tr className="bg-[#FF8227]">
                     <th className="px-4 py-2 text-white">Reference</th>
-                    <th className="px-4 py-2 text-white">Customer</th>
+                    <th className="px-4 py-2 text-white">Receiver</th>
+                    <th className="px-4 py-2 text-white">Destination</th>
                     <th className="px-4 py-2 text-white">Status</th>
-                    <th className="px-4 py-2 text-white">Payment</th>
+                    <th className="px-4 py-2 text-white">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -131,6 +169,7 @@ function AdminDashboard() {
                       <tr key={parcel.id} className="border-b hover:bg-gray-50">
                         <td className="px-4 py-2 text-gray-900">{parcel.referenceCode}</td>
                         <td className="px-4 py-2 text-gray-900">{parcel.name}</td>
+                        <td className="px-4 py-2 text-gray-900">{parcel.location}</td>
                         <td className="px-4 py-2">
                           <span className={`px-2 py-1 rounded-full text-sm ${
                             parcel.status === 'Pending' 
@@ -140,7 +179,7 @@ function AdminDashboard() {
                             {parcel.status}
                           </span>
                         </td>
-                        <td className="px-4 py-2 text-gray-900">{parcel.paymentStatus}</td>
+                        <td className="px-4 py-2 text-gray-900">${parcel.amount}</td>
                       </tr>
                     ))}
                 </tbody>
@@ -155,18 +194,5 @@ function AdminDashboard() {
     </div>
   );
 }
-
-AdminDashboard.propTypes = {
-  parcels: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      referenceCode: PropTypes.string,
-      name: PropTypes.string,
-      status: PropTypes.string,
-      paymentStatus: PropTypes.string,
-      amount: PropTypes.number,
-    })
-  ).isRequired,
-};
 
 export default AdminDashboard;
